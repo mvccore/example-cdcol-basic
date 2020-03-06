@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-class Index extends Base
-{
+class Index extends Base {
+
 	/**
 	 * Render not found action.
 	 * @return void
@@ -18,11 +18,12 @@ class Index extends Base
 	 */
 	public function ErrorAction () {
 		$code = $this->response->GetCode();
-		$message = $this->request->GetParam('message', '\\a-zA-Z0-9_;, /\-\@\:');
+		if ($code === 200) $code = 404;
+		$message = $this->request->GetParam('message', 'a-zA-Z0-9_;, \\/\-\@\:\.');
 		$message = preg_replace('#`([^`]*)`#', '<code>$1</code>', $message);
 		$message = str_replace("\n", '<br />', $message);
-		$this->view->Title = "Error $code";
-		$this->view->Message = $message;
+		$this->view->title = "Error $code";
+		$this->view->message = $message;
 		$this->Render('error');
 	}
 }

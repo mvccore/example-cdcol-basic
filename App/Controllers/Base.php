@@ -2,16 +2,16 @@
 
 namespace App\Controllers;
 
-class Base extends \MvcCore\Controller
-{
+class Base extends \MvcCore\Controller {
+
 	public function PreDispatch () {
 		parent::PreDispatch();
 		if ($this->viewEnabled) {
 			$this->_preDispatchSetUpBundles();
-			$this->view->BasePath = $this->GetRequest()->GetBasePath();
-			$this->view->CurrentRouteCssClass = str_replace(
+			$this->view->basePath = $this->request->GetBasePath();
+			$this->view->currentRouteCssClass = str_replace(
 				':', '-', strtolower(
-					$this->GetRouter()->GetCurrentRoute()->GetName()
+					$this->router->GetCurrentRoute()->GetName()
 				)
 			);
 		}
