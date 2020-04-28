@@ -45,5 +45,7 @@ class Bootstrap
 				'constraints'		=> ['id' => '\d+'],
 			]
 		]);
+
+		return $app;
 	}
 }

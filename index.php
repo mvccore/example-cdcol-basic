@@ -2,6 +2,8 @@
 
 	@include_once('vendor/autoload.php');
 
-	\App\Bootstrap::Init();
+	$app = \App\Bootstrap::Init();
 
-	\MvcCore\Application::GetInstance()->Run();
+	$app
+		//->SetCompiled(\MvcCore\Application::COMPILED_SFU)
+		->Dispatch();
