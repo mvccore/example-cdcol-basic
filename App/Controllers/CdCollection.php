@@ -23,7 +23,7 @@ class CdCollection extends Base {
 		$id = $this->GetParam("id", "0-9", NULL, 'int');
 		$this->album = Models\Album::GetById(intval($id));
 		if (!$this->album && $this->actionName == 'edit')
-			$this->renderNotFound();
+			$this->RenderNotFound();
 	}
 
 	/**
@@ -62,7 +62,12 @@ class CdCollection extends Base {
 	public function EditAction () {
 		$this->view->title = 'Edit album - ' . $this->album->Title;
 		$this->view->detailForm = $this->getCreateEditForm(TRUE)
-			->SetValues($this->album->GetValues(), TRUE, TRUE);
+			->SetValues(
+				$this->album->GetValues(
+					\MvcCore\IModel::PROPS_PUBLIC |
+					\MvcCore\IModel::PROPS_CONVERT_PASCALCASE_TO_CAMELCASE
+				), FALSE, TRUE
+			);
 	}
 
 	/**
@@ -78,10 +83,14 @@ class CdCollection extends Base {
 			$detailForm->SetErrorUrl($this->Url(':Edit', ['id' => $this->album->Id, 'absolute' => TRUE]));
 		}
 		$detailForm->Submit();
-		if ($detailForm->GetResult())
-			$this->album->SetUp(
-				$detailForm->GetValues(), \MvcCore\IModel::KEYS_CONVERSION_UNDERSCORES_TO_PASCALCASE
-			)->Save();
+		if ($detailForm->GetResult()) {
+			$this->album->SetValues(
+				$detailForm->GetValues(), 
+				\MvcCore\IModel::PROPS_PUBLIC |
+				\MvcCore\IModel::PROPS_CONVERT_CAMELCASE_TO_PASCALCASE
+			);
+			$this->album->Save();
+		}
 		$detailForm->SubmittedRedirect();
 	}
 
@@ -94,14 +103,14 @@ class CdCollection extends Base {
 	public function DeleteAction () {
 		$form = $this->getVirtualDeleteForm();
 		$form->SubmitCsrfTokens($_POST);
-		if ($form->GetResult())
+		if (!$form->GetErrors())
 			$this->album->Delete();
 		self::Redirect($this->Url(':Index'));
 	}
 
 	/**
 	 * Create form instance to create new or edit existing album.
-	 * @return \MvcCore\Ext\Form|\MvcCore\Ext\Forms\IForm
+	 * @return \MvcCore\Ext\Form
 	 */
 	protected function getCreateEditForm ($editForm = TRUE) {
 		$form = (new Form($this))
@@ -148,7 +157,7 @@ class CdCollection extends Base {
 	/**
 	 * Create empty form, where to store and manage CSRF
 	 * tokens for delete links in albums list.
-	 * @return \MvcCore\Ext\Form|\MvcCore\Ext\Forms\IForm
+	 * @return \MvcCore\Ext\Form
 	 */
 	protected function getVirtualDeleteForm () {
 		return (new Form($this))
