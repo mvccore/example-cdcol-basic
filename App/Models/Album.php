@@ -63,6 +63,7 @@ class Album extends \MvcCore\Model {
 			->prepare("DELETE FROM cds WHERE id = :id;")
 			->execute([":id" => $this->Id]);
 	}
+
 	/**
 	 * Update album with completed Id or insert new one if no Id defined.
 	 * Return Id as result.
