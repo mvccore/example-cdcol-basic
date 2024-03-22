@@ -38,11 +38,10 @@ class Bootstrap
 				'method'			=> 'POST'
 			],
 			'CdCollection:Edit'		=> [
-				//'pattern'			=> '/edit[/<id>]',
-				'match'				=> '#^/edit(/(?<id>\d+))?/?$#',
-				'reverse'			=> '/edit[/<id>]',
-				'defaults'			=> ['id' => 0,],
+				'pattern'			=> '/edit/<id>',
 				'constraints'		=> ['id' => '\d+'],
+				//'match'				=> '#^/edit/(?<id>\d+)/?$#',
+				//'reverse'			=> '/edit/<id>'
 			]
 		]);
 
