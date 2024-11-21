@@ -15,7 +15,6 @@ class Bootstrap
 			$app->SetDebugClass('MvcCore\Ext\Debugs\Tracy');
 		}
 
-
 		/**
 		 * Uncomment this line before generate any assets into temporary directory, before application
 		 * packing/building, only if you want to pack application without JS/CSS/fonts/images inside
